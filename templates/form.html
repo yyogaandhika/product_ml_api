@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Prediksi Kategori Produk</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <div class="container">
+        <h2>Prediksi Kategori Produk</h2>
+        <form action="/" method="POST">
+            <input type="number" name="total_qty" placeholder="Total Barang Terjual" required>
+            <input type="number" name="total_revenue" placeholder="Total Pendapatan" required>
+            <input type="number" name="total_transactions" placeholder="Jumlah Transaksi" required>
+            <button type="submit">Prediksi</button>
+        </form>
+
+        {% if result %}
+            <p class="message">{{ result }}</p>
+        {% endif %}
+
+        {% if error %}
+            <p class="message" style="color:red;">{{ error }}</p>
+        {% endif %}
+    </div>
+</body>
+</html>
