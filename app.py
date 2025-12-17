@@ -3,18 +3,28 @@ import pickle
 import numpy as np
 import os
 
-# Gunakan _name_ (double underscore)
+# ✅ PERBAIKAN 1: Double underscore
 app = Flask(__name__)
 
 # =====================
 # LOAD MODEL & SCALER
 # =====================
-# Tambahkan error handling agar kita tahu kalau file hilang di Vercel
 try:
-    model = pickle.load(open("kmeans_model_k4.pkl", "rb"))
-    scaler = pickle.load(open("scaler_model.pkl", "rb"))
-except FileNotFoundError:
-    print("ERROR: Model file not found. Pastikan file .pkl sudah di-upload.")
+    # Cari file model di current directory
+    model_path = os.path.join(os.path.dirname(__file__), "kmeans_model_k4.pkl")
+    scaler_path = os.path.join(os.path.dirname(__file__), "scaler_model.pkl")
+    
+    print(f"Loading model from: {model_path}")
+    print(f"Loading scaler from: {scaler_path}")
+    
+    model = pickle.load(open(model_path, "rb"))
+    scaler = pickle.load(open(scaler_path, "rb"))
+    
+    print("✅ Model and scaler loaded successfully!")
+except FileNotFoundError as e:
+    print(f"❌ ERROR: Model file not found - {e}")
+    print(f"Current directory: {os.getcwd()}")
+    print(f"Files in directory: {os.listdir('.')}")
     model = None
     scaler = None
 
@@ -97,6 +107,8 @@ def api_predict():
     except Exception as e:
         return jsonify({"error": str(e)}), 400
 
-# Opsional di Vercel, tapi berguna untuk tes lokal
-if __name__ == "_main_":
-    app.run(debug=True)
+# ✅ PERBAIKAN 2: Double underscore
+if __name__ == "__main__":
+    print("🚀 Starting Flask server...")
+    print(f"📂 Working directory: {os.getcwd()}")
+    app.run(debug=True, host="0.0.0.0", port=5000)
