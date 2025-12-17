@@ -4,7 +4,7 @@ import numpy as np
 import os
 
 # Gunakan _name_ (double underscore)
-app = Flask(_name_)
+app = Flask(__name__)
 
 # =====================
 # LOAD MODEL & SCALER
@@ -98,5 +98,5 @@ def api_predict():
         return jsonify({"error": str(e)}), 400
 
 # Opsional di Vercel, tapi berguna untuk tes lokal
-if _name_ == "_main_":
+if __name__ == "_main_":
     app.run(debug=True)
