@@ -1,14 +1,22 @@
 from flask import Flask, render_template, request, jsonify
 import pickle
 import numpy as np
+import os
 
-app = Flask(__name__)
+# Gunakan _name_ (double underscore)
+app = Flask(_name_)
 
 # =====================
 # LOAD MODEL & SCALER
 # =====================
-model = pickle.load(open("kmeans_model_k4.pkl", "rb"))
-scaler = pickle.load(open("scaler_model.pkl", "rb"))
+# Tambahkan error handling agar kita tahu kalau file hilang di Vercel
+try:
+    model = pickle.load(open("kmeans_model_k4.pkl", "rb"))
+    scaler = pickle.load(open("scaler_model.pkl", "rb"))
+except FileNotFoundError:
+    print("ERROR: Model file not found. Pastikan file .pkl sudah di-upload.")
+    model = None
+    scaler = None
 
 # =====================
 # CLUSTER KE KATEGORI
@@ -25,8 +33,12 @@ cluster_labels = {
 # =====================
 @app.route("/", methods=["GET", "POST"])
 def index():
+    if model is None or scaler is None:
+        return "Model tidak ditemukan di server. Cek log deployment.", 500
+
     result = None
     error_msg = None
+    
     if request.method == "POST":
         try:
             total_qty = float(request.form.get("total_qty", 0))
@@ -44,7 +56,7 @@ def index():
                 X = np.array([[total_qty, price_mean, velocity, revenue_per_transaction]])
                 X_scaled = scaler.transform(X)
                 cluster = int(model.predict(X_scaled)[0])
-                result = cluster_labels[cluster]["name"] + " - " + cluster_labels[cluster]["recommendation"]
+                result = f"{cluster_labels[cluster]['name']} - {cluster_labels[cluster]['recommendation']}"
         except Exception as e:
             error_msg = f"Ada kesalahan input: {str(e)}"
 
@@ -55,12 +67,15 @@ def index():
 # =====================
 @app.route("/api/predict", methods=["POST"])
 def api_predict():
+    if model is None or scaler is None:
+        return jsonify({"error": "Model not loaded"}), 500
+
     try:
         data = request.json
         product_name = data.get("product_name", "Unknown")
-        total_qty = data["total_qty"]
-        total_revenue = data["total_revenue"]
-        total_transactions = data["total_transactions"]
+        total_qty = float(data["total_qty"])
+        total_revenue = float(data["total_revenue"])
+        total_transactions = float(data["total_transactions"])
 
         # Feature engineering
         price_mean = total_revenue / total_qty
@@ -82,8 +97,6 @@ def api_predict():
     except Exception as e:
         return jsonify({"error": str(e)}), 400
 
-# =====================
-# RUN SERVER
-# =====================
-if __name__ == "__main__":
+# Opsional di Vercel, tapi berguna untuk tes lokal
+if _name_ == "_main_":
     app.run(debug=True)
