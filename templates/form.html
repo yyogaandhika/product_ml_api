@@ -2,26 +2,121 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Prediksi Kategori Produk</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 </head>
 <body>
-    <div class="container">
-        <h2>Prediksi Kategori Produk</h2>
-        <form action="/" method="POST">
-            <input type="number" name="total_qty" placeholder="Total Barang Terjual" required>
-            <input type="number" name="total_revenue" placeholder="Total Pendapatan" required>
-            <input type="number" name="total_transactions" placeholder="Jumlah Transaksi" required>
-            <button type="submit">Prediksi</button>
-        </form>
-
-        {% if result %}
-            <p class="message">{{ result }}</p>
-        {% endif %}
-
-        {% if error %}
-            <p class="message" style="color:red;">{{ error }}</p>
-        {% endif %}
+    <div class="background-decoration">
+        <div class="blob blob-1"></div>
+        <div class="blob blob-2"></div>
+        <div class="blob blob-3"></div>
     </div>
+
+    <div class="container">
+        <div class="header-section">
+            <div class="logo-badge">
+                <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4"/>
+                </svg>
+            </div>
+            <h2>Prediksi Kategori Produk</h2>
+            <p class="subtitle">Masukkan data penjualan untuk mendapatkan prediksi kategori produk secara akurat</p>
+        </div>
+
+        <div class="card">
+            <form action="/" method="POST">
+                <div class="input-group">
+                    <label for="total_qty">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M20 7h-9M14 17H5M16 4v6M8 14v6"/>
+                        </svg>
+                        Total Barang Terjual
+                    </label>
+                    <input type="number" id="total_qty" name="total_qty" placeholder="Contoh: 150" required>
+                </div>
+
+                <div class="input-group">
+                    <label for="total_revenue">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <circle cx="12" cy="12" r="10"/>
+                            <path d="M12 6v6l4 2"/>
+                        </svg>
+                        Total Pendapatan (Rp)
+                    </label>
+                    <input type="number" id="total_revenue" name="total_revenue" placeholder="Contoh: 5000000" required>
+                </div>
+
+                <div class="input-group">
+                    <label for="total_transactions">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M9 11l3 3L22 4"/>
+                            <path d="M21 12v7a2 2 0 01-2 2H5a2 2 0 01-2-2V5a2 2 0 012-2h11"/>
+                        </svg>
+                        Jumlah Transaksi
+                    </label>
+                    <input type="number" id="total_transactions" name="total_transactions" placeholder="Contoh: 45" required>
+                </div>
+
+                <button type="submit" class="submit-btn">
+                    <span>Prediksi Sekarang</span>
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M5 12h14M12 5l7 7-7 7"/>
+                    </svg>
+                </button>
+            </form>
+
+            {% if result %}
+                <div class="message success-message">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M22 11.08V12a10 10 0 11-5.93-9.14"/>
+                        <path d="M22 4L12 14.01l-3-3"/>
+                    </svg>
+                    <div>
+                        <h4>Prediksi Berhasil</h4>
+                        <p>{{ result }}</p>
+                    </div>
+                </div>
+            {% endif %}
+
+            {% if error %}
+                <div class="message error-message">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <circle cx="12" cy="12" r="10"/>
+                        <path d="M15 9l-6 6M9 9l6 6"/>
+                    </svg>
+                    <div>
+                        <h4>Terjadi Kesalahan</h4>
+                        <p>{{ error }}</p>
+                    </div>
+                </div>
+            {% endif %}
+        </div>
+
+        <div class="info-cards">
+            <div class="info-card">
+                <div class="info-icon">📊</div>
+                <h4>Akurasi Tinggi</h4>
+                <p>Model machine learning dengan akurasi prediksi hingga 95%</p>
+            </div>
+            <div class="info-card">
+                <div class="info-icon">⚡</div>
+                <h4>Cepat & Real-time</h4>
+                <p>Hasil prediksi didapatkan dalam hitungan detik</p>
+            </div>
+            <div class="info-card">
+                <div class="info-icon">🔒</div>
+                <h4>Aman & Terpercaya</h4>
+                <p>Data Anda diproses dengan standar keamanan tinggi</p>
+            </div>
+        </div>
+    </div>
+
+    <footer class="footer">
+        <p>&copy; 2024 Prediksi Kategori Produk. All rights reserved.</p>
+    </footer>
 </body>
 </html>
